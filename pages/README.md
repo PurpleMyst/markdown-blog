@@ -6,8 +6,8 @@
 
 # Usage
 
-1. Customize `template.html` to your liking, including CSS styles, headers,
-   footers, scripts, etcetera...
+1. Customize `pageTemplate.html` and `indexTemplate.html` to your liking,
+   including CSS styles, headers, footers, scripts, etcetera...
 2. Place your markdown documents in the `pages/` folder. These will be
    accessible by the index, or by going to the page directly.
 3. Run `node index.js`.

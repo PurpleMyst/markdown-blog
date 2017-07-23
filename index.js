@@ -9,10 +9,27 @@ const app = express();
 const port = process.env.PORT || 8080;
 
 let pageTemplate;
+let indexTemplate;
 
 app.get("/", (req, res) => {
   console.info("Got asked for index.");
-  res.send("No index right now.");
+
+  fs.readdir("./pages", (err, files) => {
+    if (err) {
+      res.status(500)
+         .send("Could not fetch page list.");
+    } else {
+      let pageListItems = [];
+
+      for (let filename of files) {
+        pageListItems.push(`<li><a href="/${filename}">${filename}</a></li>`);
+      }
+
+      const pageList = `<ul>\n${pageListItems.join('\n')}\n</ul>`;
+
+      res.send(indexTemplate.replace(/__PAGES__/g, pageList));
+    }
+  });
 });
 
 app.get("/:page", (req, res) => {
@@ -31,10 +48,15 @@ app.get("/:page", (req, res) => {
   });
 });
 
-fs.readFile("./template.html", "utf8", (err, data) => {
+fs.readFile("./pageTemplate.html", "utf8", (err, data) => {
   if (err) throw err;
 
-  console.info("Starting.");
   pageTemplate = data;
-  app.listen(port);
+  fs.readFile("./indexTemplate.html", "utf8", (err, data) => {
+    if (err) throw err;
+    indexTemplate = data;
+
+    console.info("Starting.");
+    app.listen(port);
+  });
 });
